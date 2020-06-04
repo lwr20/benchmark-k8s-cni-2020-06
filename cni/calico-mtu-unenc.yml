@@ -15,7 +15,7 @@ data:
   # tunnels.  For IPIP, set to your network MTU - 20; for VXLAN
   # set to your network MTU - 50.
 #  veth_mtu: "1440"
-  veth_mtu: "8980"
+  veth_mtu: "9000"
 
   # The CNI network configuration to install on each node.  The special
   # values in this config will be automatically populated.
