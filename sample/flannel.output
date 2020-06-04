@@ -1,0 +1,161 @@
+root@tokyo:/home/aducastel/bench# ./setup.sh doc-flannel
+2020-06-03 10:04:46 INFO Starting deployment of k8s with plugin doc-flannel
+2020-06-03 10:04:46 INFO ( MASTER = s04 and MINIONS = s02 s03 )
+2020-06-03 10:04:46 INFO Waiting for nodes to be ready
+2020-06-03 10:04:48 INFO Deploying nodes with Ubuntu bionic
+2020-06-03 10:04:56 INFO Waiting for nodes to be deployed
+2020-06-03 10:18:51 INFO Waiting for SSH access
+2020-06-03 10:18:59 INFO Preparing nodes
+2020-06-03 10:18:59 INFO Node s04 start
+2020-06-03 10:18:59 INFO Node s02 start
+2020-06-03 10:18:59 INFO Node s03 start
+2020-06-03 10:23:41 INFO Node s02 end
+2020-06-03 10:23:45 INFO Node s03 end
+2020-06-03 10:24:02 INFO Node s04 end
+2020-06-03 10:24:02 INFO Downloading 10G.dat on
+2020-06-03 10:24:27 INFO Deploying master
+2020-06-03 10:24:27 INFO Using master option --pod-network-cidr 10.244.0.0/16
+Warning: Permanently added '10.1.1.4' (ECDSA) to the list of known hosts.
+W0603 10:24:29.389752    9891 configset.go:202] WARNING: kubeadm cannot validate component configs for API groups [kubelet.config.k8s.io kubeproxy.config.k8s.io]
+[init] Using Kubernetes version: v1.18.3
+[preflight] Running pre-flight checks
+        [WARNING Service-Docker]: docker service is not enabled, please run 'systemctl enable docker.service'
+        [WARNING IsDockerSystemdCheck]: detected "cgroupfs" as the Docker cgroup driver. The recommended driver is "systemd". Please follow the guide at https://kubernetes.io/docs/setup/cri/
+[preflight] Pulling images required for setting up a Kubernetes cluster
+[preflight] This might take a minute or two, depending on the speed of your internet connection
+[preflight] You can also perform this action in beforehand using 'kubeadm config images pull'
+[kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+[kubelet-start] Starting the kubelet
+[certs] Using certificateDir folder "/etc/kubernetes/pki"
+[certs] Generating "ca" certificate and key
+[certs] Generating "apiserver" certificate and key
+[certs] apiserver serving cert is signed for DNS names [s04 kubernetes kubernetes.default kubernetes.default.svc kubernetes.default.svc.cluster.local] and IPs [10.96.0.1 10.1.1.4]
+[certs] Generating "apiserver-kubelet-client" certificate and key
+[certs] Generating "front-proxy-ca" certificate and key
+[certs] Generating "front-proxy-client" certificate and key
+[certs] Generating "etcd/ca" certificate and key
+[certs] Generating "etcd/server" certificate and key
+[certs] etcd/server serving cert is signed for DNS names [s04 localhost] and IPs [10.1.1.4 127.0.0.1 ::1]
+[certs] Generating "etcd/peer" certificate and key
+[certs] etcd/peer serving cert is signed for DNS names [s04 localhost] and IPs [10.1.1.4 127.0.0.1 ::1]
+[certs] Generating "etcd/healthcheck-client" certificate and key
+[certs] Generating "apiserver-etcd-client" certificate and key
+[certs] Generating "sa" key and public key
+[kubeconfig] Using kubeconfig folder "/etc/kubernetes"
+[kubeconfig] Writing "admin.conf" kubeconfig file
+[kubeconfig] Writing "kubelet.conf" kubeconfig file
+[kubeconfig] Writing "controller-manager.conf" kubeconfig file
+[kubeconfig] Writing "scheduler.conf" kubeconfig file
+[control-plane] Using manifest folder "/etc/kubernetes/manifests"
+[control-plane] Creating static Pod manifest for "kube-apiserver"
+[control-plane] Creating static Pod manifest for "kube-controller-manager"
+W0603 10:27:37.736003    9891 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+[control-plane] Creating static Pod manifest for "kube-scheduler"
+W0603 10:27:37.736700    9891 manifests.go:225] the default kube-apiserver authorization-mode is "Node,RBAC"; using "Node,RBAC"
+[etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+[apiclient] All control plane components are healthy after 29.017120 seconds
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[kubelet] Creating a ConfigMap "kubelet-config-1.18" in namespace kube-system with the configuration for the kubelets in the cluster
+[upload-certs] Skipping phase. Please see --upload-certs
+[mark-control-plane] Marking the node s04 as control-plane by adding the label "node-role.kubernetes.io/master=''"
+[mark-control-plane] Marking the node s04 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
+[bootstrap-token] Using token: h3xxe7.sudowu0k2molpfh8
+[bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
+[bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
+[bootstrap-token] configured RBAC rules to allow the csrapprover controller automatically approve CSRs from a Node Bootstrap Token
+[bootstrap-token] configured RBAC rules to allow certificate rotation for all node client certificates in the cluster
+[bootstrap-token] Creating the "cluster-info" ConfigMap in the "kube-public" namespace
+[kubelet-finalize] Updating "/etc/kubernetes/kubelet.conf" to point to a rotatable kubelet client certificate and key
+[addons] Applied essential addon: CoreDNS
+[addons] Applied essential addon: kube-proxy
+
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 10.1.1.4:6443 --token h3xxe7.sudowu0k2molpfh8 \
+    --discovery-token-ca-cert-hash sha256:b0e43b19355722b0a3843e972fa0cdf8b9fbe0add588d9b3fa399464fe49d960
+2020-06-03 10:28:08 INFO Generating join command
+2020-06-03 10:28:09 INFO Retrieving kubeconfig
+2020-06-03 10:28:20 INFO Joining nodes
+2020-06-03 10:28:48 INFO Installing CNI doc-flannel
+2020-06-03 10:28:50 INFO Waiting for nodes to be ready
+2020-06-03 10:30:35 INFO Cluster is now ready with network CNI doc-flannel
+root@tokyo:/home/aducastel/bench# ./bench.sh
+2020-06-03 10:30:50 INFO Waiting for systems to be idle ...
+2020-06-03 10:31:50 INFO Getting idle consumption (1min poll)
+2020-06-03 10:32:51 INFO Starting iperf3 server
+2020-06-03 10:32:51 INFO Waiting for pod to be alive
+2020-06-03 10:32:57 INFO Server iperf3 is listening on 10.244.1.2
+2020-06-03 10:32:57 INFO Launching benchmark for TCP
+2020-06-03 10:35:15 INFO TCP 1/3 : 9831 Mbit/s
+2020-06-03 10:37:31 INFO TCP 2/3 : 9829 Mbit/s
+2020-06-03 10:39:47 INFO TCP 3/3 : 9834 Mbit/s
+2020-06-03 10:39:48 INFO TCP result 9831 Mbit/s
+2020-06-03 10:39:48 INFO Launching benchmark for UDP
+2020-06-03 10:42:04 INFO UDP 1/3 : 9770 Mbit/s 7us jitter 9.1% drop
+2020-06-03 10:44:19 INFO UDP 2/3 : 9815 Mbit/s 7us jitter 3.1% drop
+2020-06-03 10:46:35 INFO UDP 3/3 : 9817 Mbit/s 7us jitter 5.5% drop
+2020-06-03 10:46:36 INFO UDP result 9800 Mbit/s 7us jitter 6% drop
+2020-06-03 10:46:36 INFO Cleaning resources
+2020-06-03 10:46:38 INFO Starting HTTP server
+2020-06-03 10:46:38 INFO Waiting for pod to be alive
+2020-06-03 10:46:45 INFO Server HTTP is listening on 10.244.1.3
+2020-06-03 10:46:45 INFO Launching benchmark for HTTP
+2020-06-03 10:46:56 INFO HTTP 1/3 : 9373 Mbit/s
+2020-06-03 10:47:08 INFO HTTP 2/3 : 9372 Mbit/s
+2020-06-03 10:47:20 INFO HTTP 3/3 : 9149 Mbit/s
+2020-06-03 10:47:21 INFO HTTP result 9298 Mbit/s
+2020-06-03 10:47:21 INFO Cleaning resources
+2020-06-03 10:47:34 INFO Starting FTP server
+2020-06-03 10:47:34 INFO Waiting for pod to be alive
+2020-06-03 10:47:45 INFO Server FTP is listening on 10.244.1.4
+2020-06-03 10:47:45 INFO Launching benchmark for FTP with 3 cycles
+2020-06-03 10:47:57 INFO FTP 1/3 : 9354 Mbit/s
+2020-06-03 10:48:09 INFO FTP 2/3 : 9141 Mbit/s
+2020-06-03 10:48:20 INFO FTP 3/3 : 9353 Mbit/s
+2020-06-03 10:48:21 INFO FTP result 9283 Mbit/s
+2020-06-03 10:48:21 INFO Cleaning resources
+2020-06-03 10:48:24 INFO Starting SCP server
+2020-06-03 10:48:24 INFO Waiting for pod to be alive
+2020-06-03 10:48:35 INFO Server SCP is listening on 10.244.1.5
+2020-06-03 10:48:35 INFO Launching benchmark for SCP with 3 cycles
+2020-06-03 10:49:30 INFO SCP 1/3 : 1600 Mbit/s
+2020-06-03 10:50:24 INFO SCP 2/3 : 1625 Mbit/s
+2020-06-03 10:51:16 INFO SCP 3/3 : 1636 Mbit/s
+2020-06-03 10:51:18 INFO SCP result 1620 Mbit/s
+2020-06-03 10:51:18 INFO Cleaning resources
+=========================================================================
+SUMMARY:         460        =0.21+0.01+0.20+0.00+0.00        456        =0.29+0.01+0.21+0.00+0.00        9831        473        =0.40+0.01+4.28+0.05+0.00        465        =0.68+0.00+4.53+0.01+0.00        9800        7        6        509        =1.23+0.00+11.79+0.01+0.00        466        =1.63+0.01+3.58+0.00+0.00        9298        481        =1.79+0.00+3.51+0.14+0.00        473        =0.92+0.00+3.58+0.00+0.00        9283        484        =1.22+0.00+3.20+0.17+0.00        488        =0.53+0.01+3.48+0.00+0.00        1620        491        =8.92+0.00+5.41+2.08+0.00        483        =8.30+0.00+4.08+0.00+0.00
+=========================================================================
+root@tokyo:/home/aducastel/bench# ./features.sh
+Initializing
+namespace/netpol created
+networkpolicy.networking.k8s.io/test-ingress created
+networkpolicy.networking.k8s.io/test-egress created
+Retrieving MTU
+Starting ingress/egress tests
+ING SUCCESS: 'Authorized' client 'can' access protected server
+ING FAIL: 'Unauthorized' client 'can' access protected server
+INGRESS = no
+EG SUCCESS: Protected client 'can' access 'authorized' server
+EG FAIL: Protected client 'can' access 'unauthorized' server
+Cleaning
+namespace "netpol" deleted
+Result :
+MTU : 8950
+Ingress : no         Egress : no
+root@tokyo:/home/aducastel/bench# ./clean.sh
