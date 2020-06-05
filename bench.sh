@@ -2,10 +2,10 @@
 
 source config.sh
 
-SRVTGT="$(awk '{print $1}' <<< "$MINIONS")"
-SRVSRC="$(awk '{print $2}' <<< "$MINIONS")"
+SRVTGT="ip-172-16-101-107.us-west-2.compute.internal"
+SRVSRC="ip-172-16-101-28.us-west-2.compute.internal"
 
-#echo "src=$SRVSRC tgt=$SRVTGT"
+echo "src=$SRVSRC tgt=$SRVTGT"
 #exit
 BENCH_CYCLE="3"
 IPERFTIME="120"
@@ -36,14 +36,14 @@ function mon_start {
 }
 function mon_end {
 	TIME=$(( $(date +%s) - $TIME ))
-	echo -e "$(lssh $SRVSRC ./stats.sh $TIME 2>/dev/null)\t$(lssh $SRVTGT ./stats.sh $TIME 2>/dev/null)"
+	# echo -e "$(lssh $SRVSRC ./stats.sh $TIME 2>/dev/null)\t$(lssh $SRVTGT ./stats.sh $TIME 2>/dev/null)"
 }
 
 SUMMARY=""
 
 
 info "Waiting for systems to be idle ..."
-sleep 60
+sleep 5
 
 info "Getting idle consumption (1min poll)"
 mon_start
@@ -58,7 +58,6 @@ SUMMARY="$SUMMARY\t$(mon_end)"
 info "Starting iperf3 server"
 sed 's;kubernetes.io/hostname: s02;kubernetes.io/hostname: '$SRVTGT';' kubernetes/server-iperf3.yml|kubectl apply -f - > /dev/null
 
-info "Waiting for pod to be alive"
 while true; do kubectl get pod|grep iperf-srv |grep Running >/dev/null && break; sleep 1; done
 
 # Retrieving Pod IP address
@@ -74,7 +73,7 @@ do
 	RES_TCP=$(bench_kubectl bench -it --image=infrabuilder/netbench:client -- iperf3 -c $IP -O $(( $IPERFTIME / 10 )) -f m -t $IPERFTIME 2>/dev/null \
 		| grep receiver| awk '{print $7}')
 	[ "$i" = "1" ] && MON="$(mon_end)"
-	TOT_TCP=$(( $TOT_TCP + $RES_TCP ))
+	TOT_TCP=$(( TOT_TCP + RES_TCP ))
 	info "TCP $i/$BENCH_CYCLE : $RES_TCP Mbit/s"
 	sleep 1
 done
@@ -93,10 +92,10 @@ do
 	read RES_UDP JITTER_UDP DROP_UDP <<< $(bench_kubectl bench -it --image=infrabuilder/netbench:client -- iperf3 -u -b 0 -c $IP -O $(( $IPERFTIME / 10 )) -w 256K -f m -t $IPERFTIME 2>/dev/null \
 		| grep receiver| sed 's/.* sec//'|awk '{print $3" "$5" "$8}' | tr -d "()%")
 	[ "$i" = "1" ] && MON="$(mon_end)"
-	TOT_UDP=$(( $TOT_UDP + $RES_UDP ))
+	TOT_UDP=$(( TOT_UDP + RES_UDP ))
 	PART_JIT=$(printf "%.3f" $JITTER_UDP| tr -d "."| sed 's/^0*//')
-	TOT_JIT=$(( $TOT_JIT + $PART_JIT ))
-	TOT_DROP=$(( $TOT_DROP + $( printf "%.0f" $DROP_UDP) ))
+	TOT_JIT=$(( TOT_JIT + PART_JIT ))
+	TOT_DROP=$(( TOT_DROP + $( printf "%.0f" $DROP_UDP) ))
 	info "UDP $i/$BENCH_CYCLE : $RES_UDP Mbit/s ${PART_JIT}us jitter ${DROP_UDP}% drop"
 	sleep 1
 done
@@ -197,8 +196,8 @@ do
 		-o StrictHostKeyChecking=no -v root@$IP:/root/10G.dat ./ 2>/dev/null\
 		| grep "Bytes per second" |sed -e 's/.*received //' -e 's/\..*$//' )
 	[ "$i" = "1" ] && MON="$(mon_end)"
-	TOT_SCP=$(( $TOT_SCP + RES_SCP ))
-	info "SCP $i/$BENCH_CYCLE : $(( $RES_SCP * 8 / 1024/ 1024 )) Mbit/s"
+	TOT_SCP=$(( TOT_SCP + RES_SCP ))
+	info "SCP $i/$BENCH_CYCLE : $(( RES_SCP * 8 / 1024/ 1024 )) Mbit/s"
 	sleep 1
 done
 RES_SCP=$(( $TOT_SCP * 8 / $BENCH_CYCLE / 1024 / 1024 ))
